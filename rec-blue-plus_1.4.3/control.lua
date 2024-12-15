@@ -29,16 +29,10 @@ local function register_events()
   end
 end
 
-local function log_to_game_and_file(msg)
-  game.print(msg)
-  log(msg)
-end
-
 local function on_init()
   storage.deployers = {}
   storage.scanners = {}
   storage.blueprints = {}
-  log_to_game_and_file("[DEBUG] Мод успішно ініціалізовано")
   init_caches()
   register_events()
 end
@@ -118,7 +112,6 @@ local function on_mods_changed(event)
 end
 
 local function on_setting_changed(event)
-  log_to_game_and_file("[DEBUG] Змінено налаштування: "..event.setting)
   if event.setting == "recursive-blueprints-area" then
     for _, scanner in pairs(storage.scanners) do
       AreaScanner.scan_resources(scanner)
@@ -133,33 +126,27 @@ end
 local function on_tick()
   Deployer.on_tick()
   AreaScanner.on_tick()
-  log("[DEBUG] on_tick викликано")
 end
 
 local function on_built(event)
   local entity = event.created_entity or event.entity or event.destination
 
   if not entity or not entity.valid then
-    log_to_game_and_file("[DEBUG] Недійсний об'єкт побудови")
     return
   end
 
-  log_to_game_and_file("[DEBUG] Побудовано об'єкт: "..entity.name.." (тип: "..entity.type..") на поверхні: "..entity.surface.name)
 
   -- Перевіряємо лише потрібні примари
   if entity.name == "entity-ghost" and entity.ghost_name == "blueprint-deployer" 
     and string.find(entity.surface.name, "platform") then
     
-    log_to_game_and_file("[DEBUG] Виявлено примару деплоєра на платформі, спроба відновлення")
 
     -- Відновлюємо лише цільові об'єкти
     local success, revived = entity.revive()
 
     if success and revived and revived.valid then
-      log_to_game_and_file("[DEBUG] Успішно відновлено об'єкт: "..revived.name)
       Deployer.on_built(revived)
     else
-      log_to_game_and_file("[ERROR] Неможливо відновити об'єкт")
     end
 
   elseif entity.name == "blueprint-deployer" then
@@ -176,7 +163,6 @@ end
 local function on_object_destroyed(event)
   if not event.useful_id then return end
   if event.type ~= defines.target_type.entity then return end
-  log_to_game_and_file("[DEBUG] Знищено об'єкт з ID: "..event.useful_id)
   AreaScanner.on_destroyed(event.useful_id)
   Deployer.on_destroyed(event.useful_id)
 end
@@ -338,16 +324,6 @@ local filter = {
   {filter = "type", type = "entity-ghost"},
 }
 script.on_event(defines.events.on_built_entity, on_built, filter)
--- script.on_event(defines.events.on_built_entity, on_built)
-
--- script.on_event(defines.events.on_built_entity, function(event)
---   local entity = event.created_entity or event.entity or event.destination
---   if entity and entity.valid then
---     log_to_game_and_file("[DEBUG] Побудовано об'єкт: "..entity.name.." (тип: "..entity.type..") на поверхні: "..entity.surface.name)
---   else
---     log_to_game_and_file("[DEBUG] Подія створення неуспішна")
---   end
--- end)
 script.on_event(defines.events.on_entity_cloned, on_built, filter)
 script.on_event(defines.events.on_robot_built_entity, on_built, filter)
 script.on_event(defines.events.script_raised_built, on_built, filter)

@@ -20,35 +20,25 @@ for i = 1, 5 do
     )
 end
 
-local function log_to_game_and_file(msg)
-  game.print(msg)
-  log(msg)
-end
-
 function Deployer.on_tick()
-  log_to_game_and_file("[DEBUG] Виклик функції Deployer.on_tick")
 
   -- Обчислення кількості елементів у storage.deployers
   local deployer_count = 0
   for _ in pairs(storage.deployers) do
     deployer_count = deployer_count + 1
   end
-  log_to_game_and_file("[DEBUG] Кількість деплоєрів у storage.deployers: "..tostring(deployer_count))
 
   local f = Deployer.on_tick_deployer
   for i, s in pairs(storage.deployers) do
     if s.valid then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..tostring(i).." є дійсним. Виклик on_tick_deployer.")
       f(s)
     else
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..tostring(i).." недійсний. Видалення.")
       Deployer.on_destroyed(i)
     end
   end
 end
 
 function Deployer.on_built(entity)
-  log_to_game_and_file("[DEBUG] on_built new Deployer.")
   storage.deployers[entity.unit_number] = entity
   script.register_on_object_destroyed(entity)
 end
@@ -89,7 +79,6 @@ end
 
 function Deployer.deploy_blueprint(bp, deployer)
   if not bp.is_blueprint_setup() then 
-    log_to_game_and_file("[DEBUG] Креслення не налаштоване")
     return 
   end
 
@@ -103,16 +92,13 @@ function Deployer.deploy_blueprint(bp, deployer)
 
   local position = Deployer.get_target_position(deployer)
   if not position then 
-    log_to_game_and_file("[DEBUG] Невірна цільова позиція")
     return 
   end
 
-  log_to_game_and_file("[DEBUG] Розгортання креслення у позиції: ("..position.x..","..position.y..") з напрямом: "..direction)
 
   local build_mode = defines.build_mode.forced
   if deployer.get_signal(SUPERFORCED_SIGNAL, circuit_red, circuit_green) > 0 then
     build_mode = defines.build_mode.superforced
-    log_to_game_and_file("[DEBUG] Використано суперфорсований режим будівництва")
   end
 
   bp.build_blueprint{
@@ -124,7 +110,6 @@ function Deployer.deploy_blueprint(bp, deployer)
     raise_built = true,
   }
 
-  log_to_game_and_file("[DEBUG] Креслення розгорнуте успішно")
 end
 
 function Deployer.deconstruct_area(bp, deployer, deconstruct)
@@ -297,41 +282,33 @@ end
 
 function Deployer.on_tick_deployer(deployer)
   local deployer_id = tostring(deployer.unit_number)
-  log_to_game_and_file("[DEBUG] Виклик функції on_tick_deployer для деплоєра ID="..deployer_id)
 
   -- Read deploy signal
   local get_signal = deployer.get_signal
   local deploy = read_deploy_signal(get_signal)
-  log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Отримано сигнал розгортання: "..deploy)
 
   if deploy ~= 0 then
     local command_direction = deploy > 0
     if not command_direction then deploy = -deploy end
-    log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Напрямок команди: "..tostring(command_direction).." Значення сигналу: "..deploy)
 
     local bp = deployer.get_inventory(defines.inventory.chest)[1]
     if not bp.valid_for_read then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Слот пустий або недійсний")
       return
     end
 
     if bp.is_blueprint_book then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Виявлено книгу креслень")
       local inventory = nil
       for i=1, 6 do
         inventory = bp.get_inventory(defines.inventory.item_main)
         if #inventory < 1 then
-          log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Порожня книга креслень")
           return
         end
         if i ~= 1 then deploy = get_signal(NESTED_DEPLOY_SIGNALS[i], circuit_red, circuit_green) end
         if (deploy < 1) or (deploy > #inventory) then
-          log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Неправильний індекс у книзі креслень")
           break
         end
         bp = inventory[deploy]
         if not bp.valid_for_read then
-          log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Порожній слот у книзі")
           return
         end
         if not bp.is_blueprint_book then break end
@@ -339,13 +316,10 @@ function Deployer.on_tick_deployer(deployer)
     end
 
     if bp.is_blueprint then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Запуск розгортання креслення")
       Deployer.deploy_blueprint(bp, deployer)
     elseif bp.is_deconstruction_item then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Запуск розгортання плану зносу")
       Deployer.deconstruct_area(bp, deployer, command_direction)
     elseif bp.is_upgrade_item then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Запуск оновлення області")
       Deployer.upgrade_area(bp, deployer, command_direction)
     end
     return
@@ -353,23 +327,18 @@ function Deployer.on_tick_deployer(deployer)
 
   -- Read deconstruct signal
   local deconstruct = get_signal(DECONSTRUCT_SIGNAL, circuit_red, circuit_green)
-  log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Отримано сигнал зносу: "..deconstruct)
 
   if deconstruct < 0 then
     if deconstruct == -1 then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Знос області")
       Deployer.deconstruct_area(nil, deployer, true)
     elseif deconstruct == -2 then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Знос самого себе")
       deployer.order_deconstruction(deployer.force)
       Deployer.deployer_logging("self_deconstruct", deployer, nil)
     elseif deconstruct == -3 then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Скасування зносу області")
       Deployer.deconstruct_area(nil, deployer, false)
     elseif deconstruct >= -7 then
       local whitelist = (deconstruct == -4) or (deconstruct == -6)
       local decon = (deconstruct == -4) or (deconstruct == -5)
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Сигнал фільтрованого зносу: whitelist="..tostring(whitelist).." decon="..tostring(decon))
       Deployer.signal_filtred_deconstruction(deployer, decon, whitelist)
     end
     return
@@ -377,21 +346,17 @@ function Deployer.on_tick_deployer(deployer)
 
   -- Read copy signal
   local copy = get_signal(COPY_SIGNAL, circuit_red, circuit_green)
-  log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Отримано сигнал копіювання: "..copy)
 
   if copy ~= 0 then
     if copy == 1 then
-      log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Копіювання креслення")
       Deployer.copy_blueprint(deployer)
     elseif copy == -1 then
       local stack = deployer.get_inventory(defines.inventory.chest)[1]
       if not stack.valid_for_read then
-        log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Слот пустий, немає що видаляти")
         return
       end
       if stack.is_blueprint or stack.is_blueprint_book or stack.is_upgrade_item or stack.is_deconstruction_item then
         stack.clear()
-        log_to_game_and_file("[DEBUG] Деплоєр ID="..deployer_id.." Креслення видалено")
         Deployer.deployer_logging("destroy_book", deployer, nil)
       end
     end
@@ -409,12 +374,10 @@ function Deployer.get_area(deployer)
   if W < 1 then W = 1 end
   if H < 1 then H = 1 end
 
-  log_to_game_and_file("[DEBUG] Початкові координати: X="..X.." Y="..Y.." W="..W.." H="..H)
 
   if settings.global["recursive-blueprints-area"].value == "corner" then
     X = X + math.floor((W - 1) / 2)
     Y = Y + math.floor((H - 1) / 2)
-    log_to_game_and_file("[DEBUG] Перетворення в центр: X="..X.." Y="..Y)
   end
 
   if W % 2 == 0 then X = X + 0.5 end
@@ -429,7 +392,6 @@ function Deployer.get_area(deployer)
     {position.x + X + W / 2, position.y + Y + H / 2}
   }
 
-  log_to_game_and_file("[DEBUG] Область будівництва: ("..area[1][1]..","..area[1][2]..") - ("..area[2][1]..","..area[2][2]..")")
 
   RB_util.area_check_limits(area)
   return area
@@ -448,10 +410,8 @@ function Deployer.get_target_position(deployer)
     y = d_pos.y + get_signal(Y_SIGNAL, circuit_red, circuit_green),
   }
 
-  log_to_game_and_file("[DEBUG] Цільова позиція: X="..position.x.." Y="..position.y.." Поверхня: "..deployer.surface.name)
 
   if position.x > 8000000 or position.x < -8000000 or position.y > 8000000 or position.y < -8000000 then
-    log_to_game_and_file("[DEBUG] Позиція поза межами карти")
     return
   end
 
@@ -459,32 +419,26 @@ function Deployer.get_target_position(deployer)
 end
 
 function Deployer.copy_blueprint(deployer)
-  log_to_game_and_file("[DEBUG] Виклик функції copy_blueprint")
 
   local inventory = deployer.get_inventory(defines.inventory.chest)
   if not inventory.is_empty() then
-    log_to_game_and_file("[DEBUG] Слот інвентаря не порожній, копіювання неможливе")
     return
   end
 
   for _, signal in pairs(storage.blueprint_signals) do
     local r = deployer.get_signal(signal, circuit_red) >= 1
     local g = deployer.get_signal(signal, circuit_green) >= 1
-    log_to_game_and_file("[DEBUG] Перевірка сигналу: "..signal.name.." червоний: "..tostring(r).." зелений: "..tostring(g))
 
     if r or g then
-      log_to_game_and_file("[DEBUG] Знайдено сигнал, пошук креслення у мережі")
       local stack = Deployer.find_stack_in_network(deployer, signal.name, r, g)
       if stack then
         inventory[1].set_stack(stack)
-        log_to_game_and_file("[DEBUG] Креслення скопійовано успішно")
         Deployer.deployer_logging("copy_book", deployer, stack)
         return
       end
     end
   end
 
-  log_to_game_and_file("[DEBUG] Креслення не знайдено")
 end
 
 -- Create a unique key for a circuit connector

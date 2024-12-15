@@ -1,0 +1,326 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.4.3
+Date: 2024-11-24
+  Features:
+    - The scanner can now output a list of entities and tiles marked for deconstraction.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.2
+Date: 2024-11-23
+  Features:
+    - Added new virtual signals for scanner output (counters).
+  Changes:
+    - The new scanner output signals are set by default and can no longer be changed (only return to the default).
+    - The default scanner inputs can no longer be changed.
+    - The default scanner settings are no longer saved in the blueprints.
+    - The "Old default settings for the scanner" option has been removed.
+  Locale:
+    - Added Chinese (zh-CN) localisation, thanks to plexpt.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.1
+Date: 2024-11-19
+  Features:
+    - The scanner can now see quality of buildings, ghosts and items on the ground.
+  Changes:
+    - The scanner GUI now shows the value of the input signal.
+    - The scanner now uses a hidden entity to emit signals.
+  Bugfixes:
+    - Fixed incorrect handling of destroyed objects.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.0
+Date: 2024-10-28
+  Major Features:
+    - Initial port to Factorio 2.0
+    - Added signal ("F">0) for "Super force building".
+  Changes:
+    - Removed depricatet function: Switching the train to automatic mode after construction from the BP.
+    - Removed depricatet setting: "Additional scanner output slots".
+    - By default, the "Area X,Y position" setting is now set to "Top left corner".
+    - By default, the "Deploy signal for the deployer" setting is now set to "0 (Zero)".
+---------------------------------------------------------------------------------------------------
+Version: 1.3.15
+Date: 2023-12-13
+  Bugfixes:
+    - Hotfix after previous fix.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.14
+Date: 2023-12-13
+  Bugfixes:
+    - Fixed a mod crash when blueprinting in some cases.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.13
+Date: 2023-10-14
+  Changes:
+    - Deconstruction whitelist (deconstruction command -4 and -6) now can handle tiles.
+    - The range of operation of the scanner and the deployer has been increased. (up to ~8M)
+  Bugfixes:
+    - The scanner was counting ghost tiles adjacent to the selected zone from the outside.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.12
+Date: 2023-09-24
+  Changes:
+    - Add blank filter checkbox to scanner filter GUI.
+  Bugfixes:
+    - The minimap in GUI of the scanner takes into account the scale of the interface.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.11
+Date: 2023-05-03
+  Changes:
+    - Buildings and ghosts are now counted as items needed for placement instead of mined.
+  Bugfixes:
+    - The scanner can now see landfill ghosts.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.10
+Date: 2023-04-27
+  Changes:
+    - New default settings for scanner.
+    - Added an alternative deploy signal for the deployer.
+  Bugfixes:
+    - Fixed a mod crash when feeding a negative width or height value to the scanner.
+    - The scanner can now see tile ghosts.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.9
+Date: 2022-08-07
+  Changes:
+    - Curved rails are added together with straight rails to the blacklist/whitelist for filtered decunstruction in the deployer.
+  Bugfixes:
+    - Fixed crash with certain scanner filters.
+  Locale:
+    - Added French localisation, thanks to xorblo-doitus.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.8
+Date: 2022-07-02
+  Bugfixes:
+    - Fixed a mod crash when blueprinting in conjunction with some other mods.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.7
+Date: 2022-06-15
+  Bugfixes:
+    - Fixed a mod crash when deconstructing the scanner in some cases.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.6
+Date: 2022-06-12
+  Changes:
+    - The demolition plan and the upgrade plan can now be canceled in the books as well. (Using a negative bot signal.)
+  Features:
+    - Whitelist/blacklist deconstrucion/cancel without deconstrucion planner (The filter is determined by signals).
+    - Deployer logging messages can now be localized.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.5
+Date: 2022-06-08
+  Changes:
+    - Raw resources counter now count number of spots instead of the sum of the resources received.
+    - Scanner optimization.
+    - Mod idle optimization.
+  Bugfixes:
+    - Fixed "Trees and rocks" counter not counting anything.
+    - Fixed not performing a scan when selecting the filter only "Water" and/or "Uncharted chuncs".
+---------------------------------------------------------------------------------------------------
+Version: 1.3.4
+Date: 2022-06-02
+  Changes:
+    - Improved GUI for counter settings.
+  Features:
+    - Added "Or set a constant" gui for scanner filter.
+    - Added reset button for counters.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.3
+Date: 2022-05-31
+  Bugfixes:
+    - Fixed a mod crash with "Top left corner" setting.
+    - Added a reaction to a click on the "minus" checkbox of the counter.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.2
+Date: 2022-05-31
+  Bugfixes:
+    - Fixed scanner copy/paste.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.1
+Date: 2022-05-30
+  Features:
+    - Increased scanner capabilities.
+    - Add scaner settings.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 2022-04-25
+  Features:
+    - Create fork.
+    - Small internal fixes.
+    - Nested book navigation.
+    - BP deployer logging.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.6
+Date: 2022-02-24
+  Features:
+    - Added compatibility with Space Exploration mod platforms.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.5
+Date: 2021-09-26
+  Bugfixes:
+    - Fixed manually placed wires not working.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.4
+Date: 2021-09-22
+  Features:
+    - Resource scanner detects uncharted chunks.
+  Bugfixes:
+    - Fixed potential for corruption in next().
+    - Re-selecting the contents of a blueprint works correctly, if you open it by right-clicking a blueprint in your inventory. (Opening it from the blueprint library or a blueprint book still fails.)
+---------------------------------------------------------------------------------------------------
+Version: 1.2.3
+Date: 2021-09-07
+  Bugfixes:
+    - Fixed copy tool sometimes forgetting settings.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.2
+Date: 2021-08-26
+  Bugfixes:
+    - Fixed error when upgrading from old versions.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 2021-07-03
+  Features:
+    - Resource scanner detects enemy bases.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 2021-07-03
+  Bugfixes:
+    - Fixed incorrect coordinates in resource scanner area defined by top left corner.
+    - Fixed resource scanner missing 1 tile width of water.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.9
+Date: 2021-07-02
+  Features:
+    - Added resource scanner.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.8
+Date: 2021-06-01
+  Changes:
+    - Reduced deployer chest CPU usage by 40%.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.7
+Date: 2021-05-17
+  Bugfixes:
+    - Fixed error when destroying certain buildings from other mods.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.6
+Date: 2021-05-16
+  Bugfixes:
+    - Fixed migration error loading old saves.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.5
+Date: 2021-05-15
+  Changes:
+    - Improved automatic train blueprint performance.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.4
+Date: 2021-04-12
+  Bugfixes:
+    - Fixed error when creating blueprint.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+Date: 2021-03-12
+  Bugfixes:
+    - Fixed error when creating tile blueprint.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+Date: 2021-03-09
+  Features:
+    - Train automatic mode is saved in blueprints.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+Date: 2021-02-12
+  Features:
+    - Supports blueprint books with gaps between blueprints.
+    - Supports nested blueprint books (but only uses the selected blueprint).
+---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2020-11-23
+  Features:
+    - Now compatible with Factorio 1.1.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 2020-08-28
+  Features:
+    - Supports absolute reference point.
+    - Removed wooden chest and deployer chest anchor points.
+---------------------------------------------------------------------------------------------------
+Version: 0.18.1
+Date: 2020-07-29
+  Features:
+    - Supports deconstruction planner in blueprint book.
+    - Supports upgrade planner in blueprint book.
+    - Added event filters to improve performance.
+---------------------------------------------------------------------------------------------------
+Version: 0.18.0
+Date: 2020-01-21
+  Features:
+    - Now compatible with Factorio 0.18.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.10
+Date: 2020-01-02
+  Features:
+    - Added option to use X,Y as the top left position for deconstruction and upgrades.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.9
+Date: 2019-08-26
+  Bugfixes:
+    - Now supports on_entity_cloned.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.7
+Date: 2019-07-03
+  Bugfixes:
+    - Will not deploy blueprints more than 1000000 tiles from the start position.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.6
+Date: 2019-06-05
+  Bugfixes:
+    - Set icon_size for deployer chest.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.5
+Date: 2019-06-05
+  Bugfixes:
+    - script_raised_built now sets entity.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.4
+Date: 2019-04-18
+  Bugfixes:
+    - Changed on_robot_built_entity to script_raised_built for mod compatibility.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.3
+Date: 2019-03-22
+  Bugfixes:
+    - Handles script_raised_revive correctly.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.2
+Date: 2019-03-21
+  Bugfixes:
+    - Now works in fog of war.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.1
+Date: 2019-03-20
+  Features:
+    - Upgrade planner.
+---------------------------------------------------------------------------------------------------
+Version: 0.17.0
+Date: 2019-03-12
+  Features:
+    - Compatible with Factorio 0.17.
+    - High resolution deployer chest graphics.
+    - Filtered deconstruction planner.
+  Changes:
+    - Cancel deconstruction command changed to "deconstruction-planner = -3".
+    - Deployer chest now unlocks with tech Construction robotics.
+    - Deployer chest recipe changed to match logistics chests.
+    - Deployer chest recipe moved to the same tab as logistics chests.
+---------------------------------------------------------------------------------------------------
+Version: 0.16.6
+Date: 2019-02-06
+  Bugfixes:
+    - net_cache garbage collection actually works.
+---------------------------------------------------------------------------------------------------
+Version: 0.16.5
+Date: 2018-12-11
+  Changes:
+    - Added net_cache to global to fix possible desync.
+    - Added net_cache garbage collection.
+    - Now runs 10% faster.

@@ -371,30 +371,72 @@ function Deployer.get_area(deployer)
   local W = get_signal(WIDTH_SIGNAL, circuit_red, circuit_green)
   local H = get_signal(HEIGHT_SIGNAL, circuit_red, circuit_green)
 
-  if W < 1 then W = 1 end
-  if H < 1 then H = 1 end
-
-
+  
   if settings.global["recursive-blueprints-area"].value == "corner" then
-    X = X + math.floor((W - 1) / 2)
-    Y = Y + math.floor((H - 1) / 2)
+    
+    local X1, Y1, X2, Y2
+
+    if W >= 0 and H >= 0 then
+      X1 = X
+      Y1 = Y
+      X2 = X + W - 1
+      Y2 = Y + H - 1
+    elseif W < 0 and H >= 0 then
+      X1 = X + W + 1
+      Y1 = Y
+      X2 = X
+      Y2 = Y + H - 1
+    elseif W < 0 and H < 0 then
+      X1 = X + W + 1
+      Y1 = Y + H + 1
+      X2 = X
+      Y2 = Y
+    elseif W >= 0 and H < 0 then
+      X1 = X
+      Y1 = Y + H + 1
+      X2 = X + W - 1
+      Y2 = Y
+    end
+
+    W = math.abs(W)
+    H = math.abs(H)
+
+    
+    if W % 2 == 0 then X1 = X1 + 0.5 end
+    if H % 2 == 0 then Y1 = Y1 + 0.5 end
+
+    
+    W = W - 0.0078125
+    H = H - 0.0078125
+
+    local position = deployer.position
+    local area = {
+      {position.x + X1, position.y + Y1},
+      {position.x + X2, position.y + Y2}
+    }
+
+    RB_util.area_check_limits(area)
+    return area
+  else
+    
+    if W < 1 then W = 1 end
+    if H < 1 then H = 1 end
+
+    if W % 2 == 0 then X = X + 0.5 end
+    if H % 2 == 0 then Y = Y + 0.5 end
+
+    W = W - 0.0078125
+    H = H - 0.0078125
+
+    local position = deployer.position
+    local area = {
+      {position.x + X - W / 2, position.y + Y - H / 2},
+      {position.x + X + W / 2, position.y + Y + H / 2}
+    }
+
+    RB_util.area_check_limits(area)
+    return area
   end
-
-  if W % 2 == 0 then X = X + 0.5 end
-  if H % 2 == 0 then Y = Y + 0.5 end
-
-  W = W - 0.0078125
-  H = H - 0.0078125
-
-  local position = deployer.position
-  local area = {
-    {position.x + X - W / 2, position.y + Y - H / 2},
-    {position.x + X + W / 2, position.y + Y + H / 2}
-  }
-
-
-  RB_util.area_check_limits(area)
-  return area
 end
 
 function Deployer.get_area_signals(deployer)
